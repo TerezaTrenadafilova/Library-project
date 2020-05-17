@@ -10,13 +10,23 @@ private:
 	Library m_lib;
 
 public:
+	//Променлива, която пази името на файла, с който е работено, за да изпилъни след това save() на същия файл.
+	char* m_nameFile = nullptr;
+
+	//Дали има успешно отворен файл.
+	bool isSuccessfullyOpenFile = true;//Правя го тру,дащото не реботи ореn, но ще тествам другите функции
 	bool isUser =false;
-	bool isAdmin = false;
+	bool isAdmin = true;//Защото винаги има регистриран по подразбиране администратор.
+	
 
 	std::ifstream* ptrIfs = nullptr;
 	std::ofstream* ptrOfs = nullptr;
+	
 
+	void open(char *);
 	void closeFile();
+	void save();
+	void saveAs(char*);
 	void help() const;
 
 	//Не са тествани функциите.
@@ -31,6 +41,8 @@ public:
 
 	void userAdd(char* username, char* password);
 	void userRemove(char* username);
+
+	void booksRemove(const Book&);
 
 	//Не са тествани сортировките.
 	void booksSort(char* option, char*type = "asc");

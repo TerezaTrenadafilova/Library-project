@@ -70,6 +70,9 @@ public:
 	//четене на информация за дадена книва от файл
 	void readBookFromFile( std::ifstream&);
 
+	//Предефиниран оператор ==
+	bool operator==(const Book&);
+
 private:
 	void copyFrom(const Book&);
 	void cleanMemory();

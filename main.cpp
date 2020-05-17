@@ -3,7 +3,29 @@
 #include "Book.hpp"
 #include"User.hpp"
 #include"Tag.hpp"
+#include"Manager.hpp"
 
+void testLibraryClass() {
+
+	Book b1("Ivan Vazov", "Nemili nedragi", "povest", "za osvoboditelnoto dvijenie", 1884, 2);
+	Book b2("Ivan Vazov", "Pod igoto", "roman", "za osvoboditelnoto dvijenie", 1894, 3);
+	Book b3("Aleko Konstantinov", "BAy Ganyo", "roman", "Balgarska prosottia", 1906, 1);
+	//b1.print();
+
+	Library lib;
+	std::cout << lib.getCountBook() << std::endl;
+	lib.addBook(b1);
+	lib.addBook(b2);
+	lib.addBook(b3);
+
+	/*lib.booksAll();
+	std::cout << lib.getCountBook() << std::endl;*/
+	lib.sortBooksOfAuthorDesc();//Тестване на всички въмжони сортировки.
+	lib.booksAll();
+	lib.removeBook(b1);
+	std::cout << "After remove" << std::endl;
+	lib.booksAll();
+}
 
 void testBookClass() {
 	Book b1 = Book();
@@ -107,10 +129,10 @@ void testTagClass() {
 
 int main() {
 
-	unsigned const MAX_LEN_COMMAND = 11;
+	/*unsigned const MAX_LEN_COMMAND = 11;
 	unsigned const MAX_LEN = 50;
 
-	/*unsigned countTag = 2;
+	unsigned countTag = 2;
 
 	Tag* tag = new(std::nothrow) Tag[countTag];
 	if (tag == nullptr) {
@@ -189,7 +211,7 @@ int main() {
 		}
 	}*/
 
-	int size = 5;
+	/*int size = 5;
 	int arr[5];
 	for (int i = 0; i < size; ++i) {
 		std::cin >> arr[i];
@@ -205,12 +227,27 @@ int main() {
 	for (int i = 0; i < size; ++i) {
 		std::cout << arr[i] << " ";
 	}
-	std::cout << std::endl;
+	std::cout << std::endl;*/
 
 
 	//testBookClass();
 	//testUserClass();
 	//testTagClass();
+
+
+	User u1("Ivan", "123");
+	User u2("Ani", "7414");
+	std::ofstream ofs("User1.bin", std::ios::out | std::ios::binary);
+	if (!ofs.is_open()) {
+		return 1;
+	}
+	unsigned count = 2;
+	ofs.write((const char*)& count, sizeof(count));
+	u1.serializeUser(ofs);
+	u2.serializeUser(ofs);
+	ofs.close();
+	Manager m;
+	m.runProgram();
 
 	system("pause");
 	

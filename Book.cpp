@@ -2,28 +2,6 @@
 #include <iostream>
 #include<fstream>
 #include "Book.hpp"
-////Намиране на дължина на низ.
-//unsigned my_strlen(const char* str) {
-//	unsigned result = 0;
-//	while (*str) {
-//		++str;
-//		++result;
-//	}
-//	return result;
-//}
-//
-////Копиране на две низа
-//void my_strcpy(char* dest, const char* src) {
-//	while (*src) {
-//		*dest = *src;
-//		++src;
-//		++dest;
-//	}
-//	//Дабавяне на '\0' в края на dest.
-//	*dest = '\0';
-//}
-
-
 
 unsigned Book::m_ID = 0;
 
@@ -106,7 +84,7 @@ Book::Book(const Book & other)
 Book & Book::operator=(const Book & other)
 {
 	if (this != &other) {
-		cleanMemory();
+	//	cleanMemory();
 		copyFrom(other);
 	}
 	return *this;
@@ -403,6 +381,16 @@ void Book::readBookFromFile( std::ifstream & ifs)
 	}*/
 }
 
+bool Book::operator==(const Book & book)
+{
+	if (strcmp(m_name, book.m_name) == 0 && strcmp(m_title, book.m_title) == 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 void Book::copyFrom(const Book & other)
 {
 	setAuthor(other.m_name);
@@ -417,9 +405,9 @@ void Book::copyFrom(const Book & other)
 
 void Book::cleanMemory()
 {
-	delete[] m_name;
+	delete[] m_name;	
 	m_name = nullptr;
-
+	
 	delete[] m_title;
 	m_title = nullptr;
 

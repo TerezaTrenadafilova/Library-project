@@ -41,6 +41,8 @@ public:
 
 	void cleanMemory();
 
+	
+
 	//Гетъри.
 	unsigned getCountBook()const;
 	unsigned getCapacityOfLibary()const;

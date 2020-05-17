@@ -1,3 +1,4 @@
+#pragma warning(disable:4996)
 #include<iostream>
 #include"Library.hpp"
 
@@ -9,12 +10,18 @@ const unsigned MAX_FILE_LEN = 100;
 Library::Library()
 	:m_countBook(0), m_capacity(START_CAPACITY),m_books(nullptr)
 {
+	m_books = new(std::nothrow) Book[m_capacity];
+	if (m_books == nullptr) {
+		std::cout << "Not enought memory for books is library constructor. Error!" << std::endl;
+	}
+
+	std::cout << "Constroctor without parameters." << std::endl;
 }
 
 Library::Library(unsigned count, unsigned capacity, Book * book)
 	:m_countBook(count),m_capacity(capacity), m_books(nullptr)
 {
-	m_books = new (std::nothrow) Book[count];
+	m_books = new (std::nothrow) Book[m_capacity];
 	if (m_books = nullptr) {
 		std::cout << "Not enought memory for books! Error!" << std::endl;
 		return;
@@ -47,7 +54,11 @@ Library::~Library()
 
 void Library::cleanMemory()
 {
-	delete[] m_books;
+	//for (int i = 0; i < m_countBook; ++i) {
+	std::cout << "Destructor libarary" << std::endl;
+		delete m_books;
+	//}
+	
 }
 
 unsigned Library::getCountBook() const
@@ -189,15 +200,38 @@ void Library::copyFrom(const Library & other)
 
 void Library::addBook(const Book & newBook)
 {
+	
 	if (m_countBook >= m_capacity) {
+		//std::cout << "In if of add book" << std::endl;
 		resizeLib();
 	}
-	m_books[m_countBook++] = newBook;
+	
+	m_books[m_countBook] = newBook;
+	++m_countBook;
+	
 }
 
 void Library::removeBook(const Book & book)
 {
-	//TODO: make it work
+	int posBook = -1;
+	for (int i = 0; i < m_countBook; ++i) {
+		if (m_books[i] == book) {
+			posBook = i;
+			break;
+		}
+	}
+
+	//Проверка дали книгата, която искаме да бъде премахната съществева в библиотеката.
+	if (posBook == -1) {
+		std::cout << "The book \"" << book.getTitle() << "\" is not exist in library. " << std::endl;
+		return;
+	}
+
+	//Премахване на книгата, като наредбавата на книгите не е от значение.
+	for (int i = 0; i < m_countBook; ++i) {
+		m_books[posBook] = m_books[m_countBook - 1];
+	}
+	--m_countBook;
 }
 
 void Library::booksAll()
@@ -347,15 +381,12 @@ void Library::sortBooksOfRatingDesc()
 
 void Library::sortBooksOfTitleAsc()
 {
-	for (int i = 0; i < m_countBook - 1; ++i) {
+	for (int i = 0; i < m_countBook; ++i) {
 		for (int j = i + 1; j < m_countBook; ++j) {
 			if (strcmp(m_books[i].getTitle(), m_books[j].getTitle()) > 0) {
-				/*char tempTitle[MAX_FILE_LEN];
-				strcpy(tempTitle, m_books[i].getTitle());
-				strcpy(m_books[i].getTitle(), m_books[j].getTitle());
-				strcpy(m_books[j].getTitle(), tempTitle);*/
+				
 
-				unsigned lenTemp = strlen(m_books[i].getTitle());
+				/*unsigned lenTemp = strlen(m_books[i].getTitle());
 				char* tempTitle = new(std::nothrow) char[lenTemp+1];
 				if (tempTitle == nullptr) {
 					std::cout << "Not enought memory in sortBooksOfTitleAsc(). Error! " << std::endl;
@@ -365,7 +396,12 @@ void Library::sortBooksOfTitleAsc()
 				m_books[i].setTitle(m_books[j].getTitle());
 				m_books[j].setTitle(tempTitle);
 
-				delete[] tempTitle;
+				delete[] tempTitle;*/
+
+				Book tempBook;
+				tempBook = m_books[i];
+				m_books[i] = m_books[j];
+				m_books[j] = tempBook;
 			}
 		}
 	}
@@ -373,23 +409,14 @@ void Library::sortBooksOfTitleAsc()
 
 void Library::sortBooksOfTitleDesc()
 {
-	for (int i = 0; i < m_countBook - 1; ++i) {
+	for (int i = 0; i < m_countBook; ++i) {
 		for (int j = i + 1; j < m_countBook; ++j) {
 			if (strcmp(m_books[i].getTitle(), m_books[j].getTitle()) < 0) {
-
-				unsigned lenTemp = strlen(m_books[i].getTitle());
-
-				char* tempTitle = new(std::nothrow) char[lenTemp + 1];
-				if (tempTitle == nullptr) {
-					std::cout << "Not enought memory in sortBooksOfTitleDesc(). Error! " << std::endl;
-					return;
-				}
-
-				strcpy(tempTitle, m_books[i].getTitle());
-				m_books[i].setTitle(m_books[j].getTitle());
-				m_books[j].setTitle(tempTitle);
-
-				delete[] tempTitle;
+				Book tempBook;
+				tempBook = m_books[i];
+				m_books[i] = m_books[j];
+				m_books[j] = tempBook;
+				
 			}
 		}
 	}
@@ -400,19 +427,10 @@ void Library::sortBooksOfAuthorAsc()
 	for (int i = 0; i < m_countBook - 1; ++i) {
 		for (int j = i + 1; j < m_countBook; ++j) {
 			if (strcmp(m_books[i].getName(), m_books[j].getName()) > 0) {
-				
-
-				unsigned lenTemp= strlen(m_books[i].getTitle());
-				char* tempAuthor = new(std::nothrow) char[lenTemp + 1];
-				if (tempAuthor == nullptr) {
-					std::cout << "Not enought memory in sortBooksOfTitleAsc(). Error! " << std::endl;
-					return;
-				}
-				strcpy(tempAuthor, m_books[i].getTitle());
-				m_books[i].setTitle(m_books[j].getTitle());
-				m_books[j].setTitle(tempAuthor);
-
-				delete[] tempAuthor;
+				Book tempBook;
+				tempBook = m_books[i];
+				m_books[i] = m_books[j];
+				m_books[j] = tempBook;
 			}
 		}
 	}
@@ -424,17 +442,10 @@ void Library::sortBooksOfAuthorDesc()
 		for (int j = i + 1; j < m_countBook; ++j) {
 			if (strcmp(m_books[i].getName(), m_books[j].getName()) < 0) {
 
-				unsigned lenTemp = strlen(m_books[i].getTitle());
-				char* tempAuthor = new(std::nothrow) char[lenTemp + 1];
-				if (tempAuthor == nullptr) {
-					std::cout << "Not enought memory in sortBooksOfTitleAsc(). Error! " << std::endl;
-					return;
-				}
-				strcpy(tempAuthor, m_books[i].getTitle());
-				m_books[i].setTitle(m_books[j].getTitle());
-				m_books[j].setTitle(tempAuthor);
-
-				delete[] tempAuthor;
+				Book tempBook;
+				tempBook = m_books[i];
+				m_books[i] = m_books[j];
+				m_books[j] = tempBook;
 			}
 		}
 	}
