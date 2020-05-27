@@ -129,115 +129,21 @@ void testTagClass() {
 
 int main() {
 
-	/*unsigned const MAX_LEN_COMMAND = 11;
-	unsigned const MAX_LEN = 50;
-
-	unsigned countTag = 2;
-
-	Tag* tag = new(std::nothrow) Tag[countTag];
-	if (tag == nullptr) {
-		std::cout << "Not enought memory for tags." << std::endl;
+	Book b1("Ivan Vazov", "Pod igoto", "roman", "description", 1892, 123);
+	std::ofstream ofs1("Library.bin", std::ios::out | std::ios::binary);
+	if (!ofs1.is_open()) {
 		return 1;
 	}
-
-	tag[0].setTag("bulgari");
-	tag[1].setTag("osvobojdenie");
-	Book b1("Ivan Vazov", "Nemili nedragi", "povest", "za osvoboditelnoto dvijenie", 1884, tag, countTag, countTag, 930000);
-	Book b2("Ivan Vazov", "Pod igoto", "roman", "za osvoboditelnoto dvijenie", 1894, tag, countTag, countTag, 1000000);
-
-	Library library;
-	library.addBook(b1);
-	library.addBook(b2);
-	std::ofstream lib("Library.bin", std::ios::out | std::ios::binary);
-	library.writeBooksToFile(lib);
-	lib.close();*/
-
-	/*unsigned numberUser = 1;
-	User user1("Ivan Ivanov", "ivan123");
-	std::ofstream ofs("Users.bin", std::ios::out | std::ios::binary);
-	ofs.write((const char*)& numberUser, sizeof(numberUser));
-	user1.serializeUser(ofs);
-	ofs.close();
-
-	bool isLogned = false;
-	std::cout << "Welcome!" << std::endl;
-	char command[MAX_LEN_COMMAND];
-	for (;;) {
-		std::cin.getline(command, MAX_LEN_COMMAND);
-		if (strcmp(command, "login") == 0) {
-			if (isLogned == false) {
-				char name[MAX_LEN];
-				char password[MAX_LEN];
-				std::cout << "Username: ";
-				std::cin.getline(name, MAX_LEN);
-				
-				std::cout << "Password: ";
-				std::cin.getline(password, MAX_LEN);
-
-				std::ifstream ifs("Users.bin", std::ios::in | std::ios::binary);
-				unsigned count = 0;
-				ifs.read((char*)& count, sizeof(count));
-				User *usersList = new(std::nothrow) User[count];
-				if (usersList == nullptr) {
-					std::cout << "Error!" << std::endl;
-				}
-
-				for (int i = 0; i < count; ++i) {
-					usersList[i].deserializeUser(ifs);
-				}
-				for (int i = 0; i < count; ++i) {
-					if (strcmp(usersList[i].getUsername(), name) == 0 && strcmp(usersList[i].getPassword(), password) == 0) {
-						isLogned = true;
-						std::cout << "You are logned like " << name << " ." << std::endl;
-					}
-				}
-				if (isLogned == false) {
-					std::cout << "Uncorrect username/password." << std::endl;
-				}
-			}
-			else {
-				std::cout << "You are already logged in!" << std::endl;
-			}
-		}
-
-		if (strcmp(command, "logout") == 0) {
-			isLogned = false;
-		}
-
-		if (strcmp(command, "exit") == 0) {
-			std::cout << "Exit the program!" << std::endl;
-			break;
-			return 0;
-		}
-	}*/
-
-	/*int size = 5;
-	int arr[5];
-	for (int i = 0; i < size; ++i) {
-		std::cin >> arr[i];
-	}
-	int pos = 2;
-
-	for (int i = 0; i < size; ++i) {
-		arr[pos] = arr[size - 1];
-	}
-	--size;
-
-	std::cout << "After delete: " << std::endl;
-	for (int i = 0; i < size; ++i) {
-		std::cout << arr[i] << " ";
-	}
-	std::cout << std::endl;*/
-
-
-	//testBookClass();
-	//testUserClass();
-	//testTagClass();
-
-
+	unsigned countB = 1;
+	unsigned capacity = 2;
+	ofs1.write((const char*)& countB, sizeof(countB));
+	ofs1.write((const char*)& capacity, sizeof(capacity));
+	b1.writeBookToFile(ofs1);
+	ofs1.close();
+	
 	User u1("Ivan", "123");
 	User u2("Ani", "7414");
-	std::ofstream ofs("User1.bin", std::ios::out | std::ios::binary);
+	std::ofstream ofs("Users.bin", std::ios::out | std::ios::binary);
 	if (!ofs.is_open()) {
 		return 1;
 	}
@@ -246,10 +152,10 @@ int main() {
 	u1.serializeUser(ofs);
 	u2.serializeUser(ofs);
 	ofs.close();
+	
 	Manager m;
 	m.runProgram();
 
-	system("pause");
 	
 	return 0;
 }

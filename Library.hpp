@@ -30,18 +30,7 @@ private:
 	void copyFrom(const Library&);
 
 public:
-	//Функциите до addBook() не са тествани.
-	//bool open(const char*/*, std::ifstream&*/);
-	//void closeFile();
-	//void save();
-	////дали трябва да върне файл или просто да го запише в нов?! Помисли!!
-	//void saveas(const char*/*, std::ofstream&*/);
-	//void help()const;
-	//void exit()const;
-
 	void cleanMemory();
-
-	
 
 	//Гетъри.
 	unsigned getCountBook()const;

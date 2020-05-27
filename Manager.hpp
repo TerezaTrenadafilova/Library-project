@@ -14,7 +14,7 @@ public:
 	char* m_nameFile = nullptr;
 
 	//Дали има успешно отворен файл.
-	bool isSuccessfullyOpenFile = true;//Правя го тру,дащото не реботи ореn, но ще тествам другите функции
+	bool isSuccessfullyOpenFile = false;
 	bool isUser =false;
 	bool isAdmin = true;//Защото винаги има регистриран по подразбиране администратор.
 	

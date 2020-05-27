@@ -3,7 +3,7 @@
 #include<cstring>
 #include "Manager.hpp"
 
-unsigned const MAX_LEN_COMMAND = 11;
+unsigned const MAX_LEN_COMMAND = 20;
 unsigned const MAX_LEN = 50;
 
 void Manager::open(char * fileName) 
@@ -21,17 +21,16 @@ void Manager::open(char * fileName)
 	ptrIfs = &ifs;
 	isSuccessfullyOpenFile = true;
 
-	//Прочитане даннитеза книгите от файла в бибилиотека, в която се намира.
+	//Прочитане данните за книгите от файла в бибилиотека, в която се намира.
 	m_lib.readBooksFromFile(ifs);
 
 	if (ifs.good()) {
-		std::cout << "Successfully opened file " << fileName << std::endl;
+		std::cout<<std::endl << "Successfully opened file " << fileName <<std::endl<< std::endl;
 	}
 	else {
 		std::cout << "File is not readen." << std::endl;
 	}
 	
-
 	ifs.close();
 
 }
@@ -39,34 +38,36 @@ void Manager::open(char * fileName)
 void Manager::closeFile()
 {
 	if (ptrIfs == nullptr && ptrOfs == nullptr) {
-		std::cout << "Unvalid operation!" << std::endl;
+		std::cout << std::endl << "Unvalid operation!" << std::endl<<std::endl;
 		return;
 	}
 
 	m_lib.cleanMemory();
-
-	if (ptrIfs != nullptr) {
+	isSuccessfullyOpenFile = false;
+	 
+	//Няма да ми трябва това, защото след като отворим файл, го прочитаме и го затваряме.
+	/*if (ptrIfs != nullptr) {
 		ptrIfs->close();
 	}
 	if (ptrOfs != nullptr) {
 		ptrOfs->close();
-	}
-	std::cout << "Successfully closed file." << std::endl;
+	}*/
+	std::cout << std::endl<<"Successfully closed file." << std::endl<<std::endl;
 }
 
 void Manager::save()
 {
 	std::ofstream ofs(m_nameFile, std::ios::out | std::ios::binary);
 	if (!ofs.is_open()) {
-		std::cout << "The file is not saved." << std::endl;
+		std::cout <<std::endl<< "The file is not saved." << std::endl<<std::endl;
 		return;
 	}
 	m_lib.writeBooksToFile(ofs);
 	if (ofs.good()) {
-		std::cout << "Successfully saved " << m_nameFile << std::endl;
+		std::cout<<std::endl << "Successfully saved " << m_nameFile << std::endl<<std::endl;
 	}
 	else {
-		std::cout << "Save has failed. " << std::endl;
+		std::cout <<std::endl<< "Save has failed. " << std::endl<<std::endl;
 	}
 }
 
@@ -82,22 +83,22 @@ void Manager::saveAs(char * newFileName)
 	m_lib.writeBooksToFile(ofs);
 
 	if (ofs.good()) {
-		std::cout << "Successfully saved another file " << newFileName << std::endl;
+		std::cout << std::endl << "Successfully saved another file " << newFileName << std::endl;
 	}
 	else {
-		std::cout << "Unsuccessfully saved another file " << newFileName << std::endl;
+		std::cout <<std::endl<< "Unsuccessfully saved another file " << newFileName << std::endl;
 	}
 }
 
 void Manager::help() const
 {
-	std::cout << "The following commands are supported:" << std::endl
-				<< "open<file> " << '\t' << "opens<file>";
+	std::cout << std::endl << "The following commands are supported:" <<
+		std::endl<<"open<file> " << '\t' << "opens<file>"<<std::endl;
 	std::cout << "close" << '\t' << "close currently opened file" << std::endl
-			  << "save" << '\t' << "saves the currently opened file" << std::endl
-		      << "saveas<file>" << '\t' << "saves the currently open file in <file>" << std::endl
-			  << "help" << '\t' << "prints this information" << std::endl
-			  << "exit" << '\t' << "exit the program" << std::endl;
+		<< "save" << '\t' << "saves the currently opened file" << std::endl
+		<< "saveas<file>" << '\t' << "saves the currently open file in <file>" << std::endl
+		<< "help" << '\t' << "prints this information" << std::endl
+		<< "exit" << '\t' << "exit the program" << std::endl << std::endl;
 }
 
 void Manager::login()
@@ -111,7 +112,7 @@ void Manager::login()
 		std::cout << "Password: ";
 		std::cin.getline(password, MAX_LEN);
 
-		std::ifstream ifs("User1.bin", std::ios::in | std::ios::binary);
+		std::ifstream ifs("Users.bin", std::ios::in | std::ios::binary);
 		unsigned count = 0;
 		ifs.read((char*)& count, sizeof(count));
 		User *usersList = new(std::nothrow) User[count];
@@ -122,29 +123,29 @@ void Manager::login()
 		for (int i = 0; i < count; ++i) {
 			usersList[i].deserializeUser(ifs);
 		}
-
+		
 		for (int i = 0; i < count; ++i) {
 			if (strcmp(usersList[i].getUsername(), name) == 0 && strcmp(usersList[i].getPassword(), password) == 0) {
 				isUser = true;
-				std::cout << "Welcome " << name << " !" << std::endl;
+				std::cout <<std::endl<< "Welcome " << name << " !" <<std::endl <<std::endl;
 			}
 		}
 		if (isUser == false) {
-			std::cout << "Uncorrect username/password." << std::endl;
+			std::cout << std::endl << "Uncorrect username/password." << std::endl << std::endl;
 		}
 
 		ifs.close();
 
 	}
 	else {
-		std::cout << "You are already logged in!" << std::endl;
+		std::cout<<std::endl << "You are already logged in!" << std::endl<<std::endl;
 	}
 	
 }
 
 void Manager::exit()
 {
-	std::cout << "Exit the program. " << std::endl;
+	std::cout << std::endl << "Exit the program. " << std::endl<<std::endl;
 }
 
 void Manager::logout()
@@ -172,7 +173,7 @@ void Manager::booksInfo(unsigned ID)
 
 void Manager::booksFind(char * option, char * optionString)
 {
-	if (strcmp(option, "titile") == 0) {
+	if (strcmp(option, "title") == 0) {
 		m_lib.booksFindTitile(optionString);
 	}
 
@@ -184,15 +185,11 @@ void Manager::booksFind(char * option, char * optionString)
 		m_lib.booksFindTag(optionString);
 	}
 
-	else {
-		std::cout << "Invalid search option." << std::endl;
-	}
 }
 
 void Manager::userAdd(char * username, char * password)
 {
-	std::cout << "in user add" << std::endl;
-	std::ifstream ifs("User1.bin", std::ios::in | std::ios::binary);
+	std::ifstream ifs("Users.bin", std::ios::in | std::ios::binary);
 
 	
 	if (!ifs.is_open()) {
@@ -220,7 +217,7 @@ void Manager::userAdd(char * username, char * password)
 	//Проверяваме само за потребителското име, защото не е възможно да има двама потребителя с едно и също име.
 	for (int i = 0; i < count; ++i) {
 		if (strcmp(usersList[i].getUsername(), username) == 0) {
-			std::cout << "There is already one registered user. Try again with another username." << std::endl;
+			std::cout <<std::endl <<"There is already one registered user. Try again with another username." << std::endl<<std::endl;
 			return;
 		}
 	}
@@ -229,11 +226,12 @@ void Manager::userAdd(char * username, char * password)
 
 	//Добавяне на новия потребител.
 	usersList[count] = newUser;
-	
 	++count;
 
+	std::cout << std::endl << "The user " << username << "  is registered." << std::endl << std::endl;
+
 	//Записване на новият списък с потребители.
-	std::ofstream ofs("User1.bin", std::ios::out | std::ios::binary| std::ios::trunc);
+	std::ofstream ofs("Users.bin", std::ios::out | std::ios::binary| std::ios::trunc);
 	ofs.write((const char*)& count, sizeof(count));
 
 	for (int i = 0; i < count; ++i) {
@@ -251,7 +249,7 @@ void Manager::userRemove(char * username)
 	//Прочитане на броя потребители от базата данни на потребителите.
 	ifs.read((char*)& count, sizeof(count));
 
-	User *usersList = new(std::nothrow) User[count];
+	User *usersList = new(std::nothrow) User[count+1];
 	if (usersList == nullptr) {
 		std::cout << "Error! Not enought memory for usersList." << std::endl;
 	}
@@ -262,27 +260,33 @@ void Manager::userRemove(char * username)
 
 	ifs.close();
 
+
 	int posOfTheUserToBeDeleted = -1;
 
 	//Намиране на позицията на потребителя, който ще изтрием.
 	for (int i = 0; i < count; ++i) {
 		if (strcmp(usersList[i].getUsername(), username) == 0) {
 			posOfTheUserToBeDeleted = i;
+			break;
 		}
 	}
 
 	//Проверка дали потребителят, който трябва да бъде изтрит съществува.
 	if (posOfTheUserToBeDeleted == -1) {
-		std::cout << "User with username \" " << username << "\" does not exist." << std::endl;
+		std::cout <<std::endl<< "User with username \"" << username << "\" does not exist." << std::endl<<std::endl;
 		return;
 	}
 
 	//Премахване на потребител, като наредбата на потребителите не е от значение.
-	for (int i = 0; i < count; ++i) {
-		usersList[posOfTheUserToBeDeleted] = usersList[count - 1];
-	}
+	usersList[posOfTheUserToBeDeleted] = usersList[count - 1];
+	std::cout << std::endl << "User " << username << " was deleted." << std::endl << std::endl;
 	--count;
 	
+	/*std::cout << "After delete: " << std::endl;
+	for (int i = 0; i < count; ++i) {
+		std::cout << usersList[i].getUsername() << std::endl;
+	}*/
+
 	//Записване на новият списък с потребители.
 	std::ofstream ofs("Users.bin", std::ios::out | std::ios::binary| std::ios::trunc);
 	ofs.write((const char*)& count, sizeof(count));
@@ -291,8 +295,10 @@ void Manager::userRemove(char * username)
 		usersList[i].serializeUser(ofs);
 	}
 
+	//Изтриване на паметта.
+	delete []usersList;
+	
 	ofs.close();
-
 }
 
 void Manager::booksRemove(const Book & book)
@@ -337,9 +343,9 @@ void Manager::booksSort(char * option, char * type)
 			m_lib.sortBooksOfRatingAsc();
 		}
 	}
-	else {
+	/*else {
 		std::cout << "Ivalid option/type of sort." << std::endl;
-	}
+	}*/
 }
 
 void Manager::booksAdd(const Book & book)
@@ -357,9 +363,10 @@ void Manager::runProgram()
 
 		//Отваряне на файл.
 		if (strcmp(command, "open") == 0) {
-			char fileName[MAX_LEN];
+			unsigned const lenName = MAX_LEN * 100;
+			char fileName[lenName];
 			std::cout << "file name: ";
-			std::cin.getline(fileName, MAX_LEN);
+			std::cin.getline(fileName, lenName);
 			std::cout << "File name in function open is: " << fileName << std::endl;
 
 			m_nameFile = new(std::nothrow) char[strlen(fileName) + 1];
@@ -378,7 +385,7 @@ void Manager::runProgram()
 				closeFile();
 			}
 			else {
-				std::cout << "There is an unsuccessfully opened file." << std::endl;
+				std::cout << std::endl << "There is an unsuccessfully opened file." << std::endl << std::endl;
 			}
 			
 		}
@@ -388,7 +395,7 @@ void Manager::runProgram()
 				save();
 			}
 			else {
-				std::cout << "There is an unsuccessfully opened file." << std::endl;
+				std::cout << std::endl << "There is an unsuccessfully opened file." << std::endl << std::endl;
 			}
 		}
 
@@ -399,7 +406,7 @@ void Manager::runProgram()
 				saveAs(newNameFile);
 			}
 			else {
-				std::cout << "There is an unsuccessfully opened file." << std::endl;
+				std::cout<<std::endl << "There is an unsuccessfully opened file." <<std::endl<< std::endl;
 			}
 		}
 
@@ -408,7 +415,7 @@ void Manager::runProgram()
 				help();
 			}
 			else {
-				std::cout << "There is an unsuccessfully opened file." << std::endl;
+				std::cout << std::endl << "There is an unsuccessfully opened file." << std::endl<<std::endl;
 			}
 		}
 
@@ -418,17 +425,18 @@ void Manager::runProgram()
 				login();
 			}
 			else {
-				std::cout << "There is an unsuccessfully opened file." << std::endl;
+				std::cout << std::endl << "There is an unsuccessfully opened file." << std::endl<< std::endl;
 			}
 		}
 
 		//Излизне на потребител.
 		if (strcmp(command, "logout") == 0) {
 			if (isSuccessfullyOpenFile == true) {
+				std::cout << std::endl << "You are logged out." << std::endl << std::endl;
 				logout();
 			}
 			else {
-				std::cout << "There is an unsuccessfully opened file." << std::endl;
+				std::cout <<std::endl<< "There is an unsuccessfully opened file." <<std::endl<< std::endl;
 			}
 			
 		}
@@ -446,7 +454,7 @@ void Manager::runProgram()
 				booksAll();
 			}
 			else {
-				std::cout << "No logged user or there is an unsuccessfully opened file ." << std::endl;
+				std::cout << std::endl << "No logged user or there is an unsuccessfully opened file ." << std::endl<<std::endl;
 			}	
 		}
 
@@ -458,7 +466,7 @@ void Manager::runProgram()
 				booksInfo(idBook);
 			}
 			else {
-				std::cout << "There is an unsuccessfully opened file." << std::endl;
+				std::cout<<std::endl << "There is an unsuccessfully opened file." << std::endl<<std::endl;
 			}
 			
 		}
@@ -476,7 +484,7 @@ void Manager::runProgram()
 
 			}
 			else {
-				std::cout << "No logged user or there is an unsuccessfully opened file." << std::endl;
+				std::cout<<std::endl << "No logged user or there is an unsuccessfully opened file." << std::endl<<std::endl;
 			}
 		}
 
@@ -496,7 +504,7 @@ void Manager::runProgram()
 
 			}
 			else {
-				std::cout << "No logged user or there is an unsuccessfully opened file." << std::endl;
+				std::cout<<std::endl << "No logged user or there is an unsuccessfully opened file." <<std::endl<< std::endl;
 			}
 		}
 
@@ -506,11 +514,12 @@ void Manager::runProgram()
 				char author[MAX_LEN];
 				char title[MAX_LEN];
 				char genre[MAX_LEN];
-				char description[MAX_LEN];
+				const unsigned lenOfDescription = MAX_LEN + 100;
+				char description[lenOfDescription];
 				unsigned year;
 				unsigned rating;
 
-				std::cout << "You want to add a new book. Please enter the book details first." << std::endl;
+				std::cout <<std::endl<< "You want to add a new book. Please enter the book details first." << std::endl;
 
 				std::cout << "Author: ";
 				std::cin.getline(author, MAX_LEN);
@@ -522,7 +531,7 @@ void Manager::runProgram()
 				std::cin.getline(genre, MAX_LEN);
 
 				std::cout << "Description: ";
-				std::cin.getline(description, MAX_LEN);
+				std::cin.getline(description, lenOfDescription);
 
 				std::cout << "Year of issue: ";
 				std::cin >> year;
@@ -536,7 +545,7 @@ void Manager::runProgram()
 
 			}
 			else {
-				std::cout << "No logged user/admin or there is an unsuccessfully opened file." << std::endl;
+				std::cout<<std::endl << "No logged user/admin or there is an unsuccessfully opened file." << std::endl<<std::endl;
 			}
 		}
 
@@ -556,7 +565,7 @@ void Manager::runProgram()
 				userAdd(username, password);
 			}
 			else {
-				std::cout << "No logged user/admin or there is an unsuccessfully opened file." << std::endl;
+				std::cout <<std::endl<< "No logged user/admin or there is an unsuccessfully opened file." << std::endl<<std::endl;
 			}
 		}
 
@@ -571,7 +580,7 @@ void Manager::runProgram()
 				userRemove(usernameErase);
 			}
 			else{
-				std::cout << "No logged user/admin or there is an unsuccessfully opened file." << std::endl;
+				std::cout <<std::endl<< "No logged user/admin or there is an unsuccessfully opened file." << std::endl<<std::endl;
 			}
 		}
 
@@ -580,12 +589,8 @@ void Manager::runProgram()
 			if ((isUser == true || isAdmin == true) && isSuccessfullyOpenFile == true) {
 				char author[MAX_LEN];
 				char title[MAX_LEN];
-				char genre[MAX_LEN];
-				char description[MAX_LEN];
-				unsigned year;
-				unsigned rating;
 
-				std::cout << "You want to add a new book. Please enter the book details first." << std::endl;
+				std::cout << "You want to delete a book. Please enter the book details first." << std::endl;
 
 				std::cout << "Author: ";
 				std::cin.getline(author, MAX_LEN);
@@ -593,24 +598,13 @@ void Manager::runProgram()
 				std::cout << "Title: ";
 				std::cin.getline(title, MAX_LEN);
 
-				std::cout << "Genre: ";
-				std::cin.getline(genre, MAX_LEN);
 
-				std::cout << "Description: ";
-				std::cin.getline(description, MAX_LEN);
-
-				std::cout << "Year of issue: ";
-				std::cin >> year;
-
-				std::cout << "Rating: ";
-				std::cin >> rating;
-
-				Book newBook(author, title, genre, description, year, rating);
+				Book newBook(author, title);
 
 				booksRemove(newBook);
 			}
 			else {
-				std::cout << "No logged user/admin or there is an unsuccessfully opened file." << std::endl;
+				std::cout<<std::endl << "No logged user/admin or there is an unsuccessfully opened file." << std::endl<<std::endl;
 			}
 		}
 

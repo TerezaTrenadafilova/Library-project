@@ -15,7 +15,6 @@ Library::Library()
 		std::cout << "Not enought memory for books is library constructor. Error!" << std::endl;
 	}
 
-	std::cout << "Constroctor without parameters." << std::endl;
 }
 
 Library::Library(unsigned count, unsigned capacity, Book * book)
@@ -54,11 +53,7 @@ Library::~Library()
 
 void Library::cleanMemory()
 {
-	//for (int i = 0; i < m_countBook; ++i) {
-	std::cout << "Destructor libarary" << std::endl;
-		delete m_books;
-	//}
-	
+	delete[] m_books;
 }
 
 unsigned Library::getCountBook() const
@@ -98,106 +93,6 @@ void Library::copyFrom(const Library & other)
 	}
 }
 
-
-//Как да направим файла да се отваря за четене и писане?
-//bool Library::open(const char * fileName)
-//{
-//	std::cout << "How you want the file to be opened. Enter 'r' for reading or 'w' for writing." << std::endl;
-//	char typeFile;
-//	std::cin >> typeFile;
-//	if (typeFile == 'r') {
-//		std::ifstream ifs;
-//		ifs.open(fileName, std::ios::binary);
-//
-//		//Проверка дали файлът е отворен успешно.
-//		if (!ifs.is_open()) {
-//			std::cout << "Failed to open!";
-//			return false;
-//		}
-//		ptrIfs = &ifs;
-//		readBooksFromFile(ifs);
-//		//Ако файлът е отворен успешно.
-//		std::cout << "Succesffully opened " << fileName << std::endl;
-//		return true;
-//	}
-//	else if (typeFile == 'w') {
-//		std::ofstream ofs;
-//		ofs.open(fileName, std::ios::binary);
-//
-//		//Проверка дали файлът е отворен успешно.
-//		if (!ofs.is_open()) {
-//			std::cout << "Failed to open!";
-//			return false;
-//		}
-//		ptrOfs = &ofs;
-//
-//		//Ако файлът е отворен успешно.
-//		std::cout << "Succesffully opened " << fileName << std::endl;
-//		return true;
-//	}
-//
-//}
-//
-//void Library::closeFile()
-//{
-//	
-//	cleanMemory();
-//	if (ptrIfs == nullptr && ptrOfs == nullptr) {
-//		std::cout << "Unvalid operation!" << std::endl;
-//	}
-//	if (ptrIfs != nullptr) {
-//		ptrIfs->close();
-//	}
-//	if (ptrOfs != nullptr) {
-//		ptrOfs->close();
-//	}
-//	std::cout << "Successfully closed file." << std::endl;
-//	
-//}
-//
-//void Library::save()
-//{
-//	//Щом сме извикали функцията save, дначи сме променяли файла. Затова използвам ptrOfs.
-//	if (ptrOfs != nullptr) {
-//		writeBooksToFile(*ptrOfs);
-//	
-//		std::cout << "Successfully saved." << std::endl;
-//	}
-//	std::cout << "You are trying to save a file that has not been modified" << std::endl;
-//	
-//}
-//
-//void Library::saveas(const char * name) {
-//	std::ofstream ofs(name, std::ios::binary);
-//
-//	if (!ofs.is_open()) {
-//		std::cout << "Not save " << name << " as file.";
-//		return;
-//	}
-//	writeBooksToFile(ofs);
-//
-//	//затваряне на файла, след като сме писали в него.
-//	ofs.close();
-//
-//}
-//
-//void Library::help() const
-//{
-//	std::cout << "The following commands are supported:" << std::endl
-//		<< "open<file> " << '\t' << "opens<file>";
-//	std::cout << "close" << '\t' << "close currently opened file" << std::endl
-//		<< "save" << '\t' << "saves the currently opened file" << std::endl
-//		<< "saveas<file>" << '\t' << "saves the currently open file in <file>" << std::endl
-//		<< "help" << '\t' << "prints this information" << std::endl
-//		<< "exit" << '\t' << "exit the program" << std::endl;
-//}
-//
-//void Library::exit() const
-//{
-//	std::cout << "Exit the program!" << std::endl;
-//	
-//}
-
 void Library::addBook(const Book & newBook)
 {
 	
@@ -227,11 +122,11 @@ void Library::removeBook(const Book & book)
 		return;
 	}
 
+	std::cout << std::endl << "The book \"" << m_books[posBook].getTitle() << "\" has been removed." << std::endl << std::endl;
 	//Премахване на книгата, като наредбавата на книгите не е от значение.
-	for (int i = 0; i < m_countBook; ++i) {
-		m_books[posBook] = m_books[m_countBook - 1];
-	}
+	m_books[posBook] = m_books[m_countBook - 1];
 	--m_countBook;
+
 }
 
 void Library::booksAll()
@@ -243,7 +138,21 @@ void Library::booksAll()
 
 void Library::booksInfo(unsigned id)
 {
+	int posOfBook = -1;
+
+	//Проверка дали съществува книга с въведеното id.
 	for (int i = 0; i < m_countBook; ++i) {
+		if (m_books[i].getID() == id) {
+			posOfBook = i;
+			break; //Прекъсваме цикъла, защото всяка книга има уникален идентификационен номер.
+		}
+	}
+	if (posOfBook == -1) {
+		std::cout << std::endl << "The book with id " << id << " is not exist." << std::endl << std::endl;
+		return;
+	}
+
+	/*for (int i = 0; i < m_countBook; ++i) {
 		if (m_books[i].getID() == id) {
 			std::cout << "Author: " << m_books[i].getName() << std::endl
 				<< "Title: " << m_books[i].getTitle() << std::endl
@@ -251,9 +160,12 @@ void Library::booksInfo(unsigned id)
 				<< "Description: " << m_books[i].getDescription() << std::endl
 				<< "Year of issue: " << m_books[i].getYearOfIssue() << std::endl
 				<< "Rating: " << m_books[i].getRating() << std::endl
-				<< "ID: " << m_books[i].getID() << std::endl;
+				<< "ID: " << m_books[i].getID() << std::endl << std::endl;
 		}
-	}
+	}*/
+
+	//Извеждане на пълната информация за книгата с id.
+	m_books[posOfBook].printAllInfo();
 }
 
 void Library::booksFindTitile(char * title)
@@ -522,7 +434,7 @@ void Library::readBooksFromFile(std::ifstream & ifs)
 	ifs.read((char*)& m_countBook, sizeof(m_countBook));
 	ifs.read((char*)& m_capacity, sizeof(m_capacity));
 
-	cleanMemory();
+	//cleanMemory();
 
 	m_books = new(std::nothrow) Book[m_capacity];
 	if (m_books == nullptr) {

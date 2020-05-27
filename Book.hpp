@@ -20,13 +20,14 @@ private:
 //	char* m_keywords;//не съм сигурна дали трабва да е масив от думи. Тествай го!!!!!
 	
 	unsigned m_rating;
-	
+	unsigned m_bookID;
 
 public:
 	static unsigned m_ID;
 
 	Book();
-	Book(char*, char*, char*, char*, unsigned, unsigned, Tag* = nullptr, unsigned = 0, unsigned = 0);
+	Book(char*, char*);
+	Book(char*, char*, char*, char*, unsigned, unsigned, Tag* = nullptr, unsigned = 0, unsigned = 0, unsigned= m_ID);
 	Book(char*, char*, char*, char*, unsigned, Tag*,unsigned,unsigned, unsigned); //псоледната променлива я няма за ID
 	Book(const Book&);
 	Book& operator=(const Book&);
@@ -59,10 +60,13 @@ public:
 	unsigned getCapacityTag() const;
 	
 	unsigned getRating()const;
-	static unsigned getID();
+	/*static*/ unsigned getID();
 
 	//print- функция
 	void print() const;
+
+	//Извеждане на пълна информация за книгата.
+	void printAllInfo() const;
 
 	//записване на книга във файл
 	void writeBookToFile( std::ofstream&);

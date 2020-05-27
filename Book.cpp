@@ -4,6 +4,7 @@
 #include "Book.hpp"
 
 unsigned Book::m_ID = 0;
+unsigned startCapacity = 8;
 
 Book::Book()
 	:m_name(nullptr)
@@ -13,14 +14,46 @@ Book::Book()
 	, m_yearOfIssue(0)
 	, m_tags(nullptr)
 	, m_numberTag(0)
-	, m_capacityTag(2)
+	, m_capacityTag(startCapacity)
 	,m_rating(0)
+	//,m_bookID(m_ID)
 {
+	m_tags = new(std::nothrow) Tag[m_capacityTag];
+	if (m_tags == nullptr) {
+		std::cout << "Not enought memory for tags. Error!" << std::endl << std::endl;
+		return;
+	}
+	/*m_bookID = m_ID;
+	++m_ID;*/ //Този конструктор го използваме при съсдване на tempBook при сортировките и затова не увеличаваме id.
+}
+
+//Този конструщтор го използвам, когато искам една книга да бъде изтрита.
+//За това няма ++m_ID.
+Book::Book(char *name, char * title)
+	:m_name(nullptr)
+	,m_title(nullptr)
+	, m_genre(nullptr)
+	, m_description(nullptr)
+	, m_yearOfIssue(0)
+	, m_tags(nullptr)
+	, m_numberTag(0)
+	, m_capacityTag(startCapacity)
+	, m_rating(0)
+	//,m_bookID(m_ID)
+{
+	m_tags = new(std::nothrow) Tag[m_capacityTag];
+	if (m_tags == nullptr) {
+		std::cout << "Not enought memory for tags. Error!" << std::endl << std::endl;
+		return;
+	}
+	setAuthor(name);
+	setTitle(title);
+	m_bookID = m_ID;
 	++m_ID;
 }
 
 //Не знам дали ще работи правилно. По-скоро дали е написано провилно.
-Book::Book(char * name, char * title, char * genre, char * description, unsigned year, unsigned rating, Tag *, unsigned, unsigned)
+Book::Book(char * name, char * title, char * genre, char * description, unsigned year, unsigned rating, Tag *, unsigned, unsigned, unsigned)
 	:m_name(nullptr)
 	, m_title(nullptr)
 	, m_genre(nullptr)
@@ -35,6 +68,13 @@ Book::Book(char * name, char * title, char * genre, char * description, unsigned
 	setYearOfIssue(year);
 	setRating(rating);
 
+	m_tags = new(std::nothrow) Tag[m_capacityTag];
+	if (m_tags == nullptr) {
+		std::cout << "Not enought memory for tags. Error!" << std::endl << std::endl;
+		return;
+	}
+
+	m_bookID = m_ID;
 	//Увеличаваме броя ID.
 	++m_ID;
 }
@@ -51,16 +91,11 @@ Book::Book(char *name, char * title, char * genre, char * dеscpription,unsigned 
 	, m_rating(rating)
 
 {
-
-	std::cout << "Constructor with parametars:" << std::endl;
-
-
 	this->setAuthor(name);
 	this->setTitle(title);
 	this->setGenre(genre);
 	this->setDescription(dеscpription);
 	//инициялизация на ключовите думи
-	//this->setKeywords(tags);
 	m_tags = new(std::nothrow) Tag[m_capacityTag];
 	if (m_tags == nullptr) {
 		std::cout << "not enought memory to set tags." << std::endl;
@@ -69,7 +104,7 @@ Book::Book(char *name, char * title, char * genre, char * dеscpription,unsigned 
 	for (int i = 0; i < m_numberTag; ++i) {
 		m_tags[i] = tags[i];
 	}
-	//this->setKeywords();
+	m_bookID = m_ID;
 	++m_ID;
 
 }
@@ -148,17 +183,8 @@ void Book::setYearOfIssue(unsigned year)
 	m_yearOfIssue = year;
 }
 
-void Book::setKeywords(/*char * keywords*/ Tag* tag)
+void Book::setKeywords( Tag* tag)
 {
-	//delete[] m_keywords;
-
-	/*m_keywords = new(std::nothrow) char[my_strlen(keywords) + 1];
-	if (m_keywords == nullptr) {
-		std::cout << "Not enought memory for keywords! Error!" << std::endl;
-		return;
-	}
-	my_strcpy(m_keywords, keywords);*/
-
 	m_tags = new(std::nothrow) Tag[m_capacityTag];
 	if (m_tags == nullptr) {
 		std::cout << "not enought memory to set tags." << std::endl;
@@ -231,7 +257,7 @@ unsigned Book::getRating() const
 
 unsigned Book::getID()
 {
-	return m_ID;
+	return m_bookID;
 }
 
 void Book::print() const
@@ -240,7 +266,18 @@ void Book::print() const
 	std::cout << "Author: " << m_name << std::endl
 		<< "Titile: " << m_title << std::endl
 		<< "Genre: " << m_genre << std::endl
-		<< "ID: " << m_ID << std::endl;
+		<< "ID: " << m_bookID << std::endl << std::endl;
+}
+
+void Book::printAllInfo() const
+{
+	std::cout << "Author: " << m_name << std::endl
+		<< "Title: " << m_title << std::endl
+		<< "Genre: " << m_genre << std::endl
+		<< "Description: " << m_description << std::endl
+		<< "Year of issue: " << m_yearOfIssue << std::endl
+		<< "Rating: " << m_rating << std::endl
+		<< "ID: " << m_bookID << std::endl << std::endl;
 }
 
 void Book::writeBookToFile(/*const Book & book,*/ std::ofstream & ofs)
@@ -282,7 +319,7 @@ void Book::writeBookToFile(/*const Book & book,*/ std::ofstream & ofs)
 
 	ofs.write((const char*)& m_rating, sizeof(unsigned));
 
-	ofs.write((const char*)& m_ID, sizeof(m_ID));
+	ofs.write((const char*)& m_bookID, sizeof(m_bookID));
 
 	/*if (ofs.good()) {
 		std::cout << "Siccessfully serialize!" << std::endl;
@@ -371,7 +408,7 @@ void Book::readBookFromFile( std::ifstream & ifs)
 
 	ifs.read((char*)& m_rating, sizeof(unsigned));
 
-	ifs.read((char*)& m_ID, sizeof(m_ID));
+	ifs.read((char*)& m_bookID, sizeof(m_bookID));
 
 	/*if (ifs.good()) {
 		std::cout << "Successfully deserialize!" << std::endl;
@@ -400,7 +437,7 @@ void Book::copyFrom(const Book & other)
 	setYearOfIssue(other.m_yearOfIssue);
 	setKeywords(other.m_tags);
 	setRating(other.m_rating);
-	m_ID = other.m_ID;
+	m_bookID = other.m_bookID;
 }
 
 void Book::cleanMemory()
