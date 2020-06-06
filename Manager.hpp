@@ -10,11 +10,16 @@ private:
 	Library m_lib;
 
 public:
+	static unsigned const MAX_LEN_COMMAND = 20;//Константа за максимална дължина на команда.
+	static unsigned const MAX_LEN = 50;
+
 	//Променлива, която пази името на файла, с който е работено, за да изпилъни след това save() на същия файл.
 	char* m_nameFile = nullptr;
 
 	//Дали има успешно отворен файл.
 	bool isSuccessfullyOpenFile = false;
+
+	//Променлива, която пази дали има упсешно влязъл потребител.
 	bool isUser =false;
 	bool isAdmin = true;//Защото винаги има регистриран по подразбиране администратор.
 	
@@ -29,28 +34,33 @@ public:
 	void saveAs(char*);
 	void help() const;
 
-	//Не са тествани функциите.
 	void login();
 	void exit();
 	void logout();
 	void booksAll();
+
+	//Извеждане на информацията за книга с даден номер.
 	void booksInfo(unsigned ID);
 
-	//Тествай я отделно.
+	//Търсене на книга по определен критерии и стойност на критерия.
 	void booksFind(char* option, char* optionString);
 
+	//Добавяне на потребител.
 	void userAdd(char* username, char* password);
+
+	//Премахване на потребител.
 	void userRemove(char* username);
 
+	//Прамахване на книга.
 	void booksRemove(const Book&);
 
-	//Не са тествани сортировките.
+	//Сортиране на книгите по даден критерии. По подразбиране сортирането ще е във възходящ ред.
 	void booksSort(char* option, char*type = "asc");
 
 	//Добавяне на книга.
 	void booksAdd(const Book&);
 
-	//Не е тествана.
+	//Стартиране на програмата. 
 	void runProgram();
 };
 

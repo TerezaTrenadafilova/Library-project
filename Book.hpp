@@ -17,18 +17,22 @@ private:
 	Tag* m_tags;
 	unsigned m_numberTag;
 	unsigned m_capacityTag;
-//	char* m_keywords;//не съм сигурна дали трабва да е масив от думи. Тествай го!!!!!
+
 	
 	unsigned m_rating;
+	//Уникален идентификационен номер на книга.
 	unsigned m_bookID;
 
 public:
 	static unsigned m_ID;
+	static const unsigned startCapacity = 8;
+
+
 
 	Book();
 	Book(char*, char*);
 	Book(char*, char*, char*, char*, unsigned, unsigned, Tag* = nullptr, unsigned = 0, unsigned = 0, unsigned= m_ID);
-	Book(char*, char*, char*, char*, unsigned, Tag*,unsigned,unsigned, unsigned); //псоледната променлива я няма за ID
+	Book(char*, char*, char*, char*, unsigned, Tag*,unsigned,unsigned, unsigned); //последната променлива я няма за ID
 	Book(const Book&);
 	Book& operator=(const Book&);
 	~Book();

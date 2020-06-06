@@ -3,8 +3,7 @@
 #include<cstring>
 #include "Manager.hpp"
 
-unsigned const MAX_LEN_COMMAND = 20;
-unsigned const MAX_LEN = 50;
+
 
 void Manager::open(char * fileName) 
 {
@@ -18,7 +17,7 @@ void Manager::open(char * fileName)
 	}
 	
 
-	ptrIfs = &ifs;
+	ptrIfs = &ifs;//Пренасочване на указателя към потока.
 	isSuccessfullyOpenFile = true;
 
 	//Прочитане данните за книгите от файла в бибилиотека, в която се намира.
@@ -115,7 +114,7 @@ void Manager::login()
 		std::ifstream ifs("Users.bin", std::ios::in | std::ios::binary);
 		unsigned count = 0;
 		ifs.read((char*)& count, sizeof(count));
-		User *usersList = new(std::nothrow) User[count];
+		User *usersList = new(std::nothrow) User[count]; //Данните за потребителите се пази в отделен файл.
 		if (usersList == nullptr) {
 			std::cout << "Error!" << std::endl;
 		}

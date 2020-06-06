@@ -20,9 +20,9 @@ public:
 	Library& operator = (const Library& );
 	~Library();
 
-	std::ifstream* ptrIfs=nullptr;
-	std::ofstream* ptrOfs= nullptr;
-	bool isIfstream = false;
+	//std::ifstream* ptrIfs=nullptr;
+	//std::ofstream* ptrOfs= nullptr;
+	//bool isIfstream = false;
 
 private:
 	
@@ -30,14 +30,11 @@ private:
 	void copyFrom(const Library&);
 
 public:
-	void cleanMemory();
+	void cleanMemory();//Публична функиция, за да се извиква при въвеждане на команда close.
 
 	//Гетъри.
 	unsigned getCountBook()const;
 	unsigned getCapacityOfLibary()const;
-
-	//Сетъри.Добави ги ако ти потрябват.
-
 
 	//Добавяне на нова книга.
 	void addBook(const Book&);

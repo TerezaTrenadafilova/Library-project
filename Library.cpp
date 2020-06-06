@@ -3,8 +3,8 @@
 #include"Library.hpp"
 
 unsigned Library::START_CAPACITY = 16;
-const unsigned MAX_CMD_LEN = 7;
-const unsigned MAX_FILE_LEN = 100;
+//const unsigned MAX_CMD_LEN = 7;
+//const unsigned MAX_FILE_LEN = 100;
 
 
 Library::Library()
@@ -97,7 +97,6 @@ void Library::addBook(const Book & newBook)
 {
 	
 	if (m_countBook >= m_capacity) {
-		//std::cout << "In if of add book" << std::endl;
 		resizeLib();
 	}
 	
@@ -116,7 +115,7 @@ void Library::removeBook(const Book & book)
 		}
 	}
 
-	//Проверка дали книгата, която искаме да бъде премахната съществева в библиотеката.
+	//Проверка дали книгата, която искаме да бъде премахната съществува в библиотеката.
 	if (posBook == -1) {
 		std::cout << "The book \"" << book.getTitle() << "\" is not exist in library. " << std::endl;
 		return;
@@ -178,10 +177,6 @@ void Library::booksFindTitile(char * title)
 			//Извеждане на информацията за книгата
 			m_books[i].print();
 			std::cout << std::endl;
-
-			////Връщане на книгата като резултат, защото потребителят може да иска да я вземе.
-			//return m_books[i];
-			
 		}
 	}
 
@@ -363,44 +358,6 @@ void Library::sortBooksOfAuthorDesc()
 	}
 }
 
-//void Library::runProgram()
-//{
-//	/*char input[MAX_CMD_LEN];
-//	char fileName[MAX_FILE_LEN];
-//
-//	bool isOpenedFile = false;
-//	for (;;) {//безкраен цикъл
-//		std::cin >> input;
-//		if (my_strcmp(input, "open") == 0) {
-//			std::cin >> fileName;
-//			isOpenedFile=open(fileName);
-//		}
-//		if (isOpenedFile == true) {
-//			if (my_strcmp(input, "close")==0) {
-//				close();
-//			}
-//			else if (my_strcmp(input, "save")==0) {
-//				save();
-//			}
-//			else if (my_strcmp(input, "saveas")==0) {
-//				std::cin >> fileName;
-//				saveas(fileName);
-//			}
-//			else if (my_strcmp(input, "help") == 0) {
-//				help();
-//			}
-//			else if (my_strcmp(input, "exit") == 0) {
-//				exit();
-//			}
-//			else {
-//				std::cout << "Unknown command! Command 'hepl' will help you." << std::endl;
-//			}
-//		}
-//		std::cout < "Try again to open file." << std::endl;
-//	}*/
-//
-//	std::cout << "do to work!" << std::endl;
-//}
 
 void Library::writeBooksToFile( std::ofstream & ofs)
 {
